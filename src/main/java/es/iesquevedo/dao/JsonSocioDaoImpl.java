@@ -1,5 +1,12 @@
 package es.iesquevedo.dao;
 
+// NUEVOS IMPORTS NECESARIOS
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import java.nio.file.Path;
+
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -16,16 +23,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@ApplicationScoped
 public class JsonSocioDaoImpl implements JsonSocioDao {
+
     private final File file;
     private final Gson gson;
     private List<Socio> store = new ArrayList<>();
 
-    public JsonSocioDaoImpl(String filePath) {
-        this.file = new File(filePath);
+
+    @Inject
+    public JsonSocioDaoImpl(@Named("fileSocios") Path path) {
+        this.file = path.toFile();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         load();
     }
+
 
     @Override
     public void load() {
